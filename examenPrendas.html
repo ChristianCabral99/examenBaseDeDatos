@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Nacional Monte de Piedad - Prendas</title>
+
+  </head>
+  <body bgcolor="#f9f9f9">
+    <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>
+     <script src="https://www.gstatic.com/firebasejs/3.8.0/firebase-app.js"></script>
+     <script src="https://www.gstatic.com/firebasejs/3.8.0/firebase-database.js"></script>
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  	<script>
+    var firebaseConfig = {
+    apiKey: "AIzaSyCLVHu4FuBxkn1fzuKS98is7LJ2NfvEwZQ",
+    authDomain: "examen-christiancabral.firebaseapp.com",
+    databaseURL: "https://examen-christiancabral.firebaseio.com",
+    projectId: "examen-christiancabral",
+    storageBucket: "examen-christiancabral.appspot.com",
+    messagingSenderId: "161495407175",
+    appId: "1:161495407175:web:5e52bb6271b7045d352f62"
+  };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+  var refDB = firebase.database().ref().child('prendas');
+  var usuarios={};
+  refDB.on('value',function(datos)
+  {
+  		$("tbody").children().remove()
+      usuarios=datos.val();
+      // Recorremos los productos y los mostramos
+      $.each(usuarios, function(indice,valor)
+      {
+          var tBody = document.getElementById('dataTable').lastElementChild;
+          var tr1 = document.createElement('tr');
+          tBody.appendChild(tr1);
+          var prevProducto='<td>'+valor.descripcion+'</td>';
+          prevProducto+='<td>'+valor.valor+'</td>';
+          prevProducto+='<td><button type="button" class="boton" onclick="editar(\''+indice+'\')">Editar</button></td>';
+          prevProducto+='<td><button type="button" class="boton" onclick="borrar(\''+indice+'\')">Borrar</button></td>';
+          $(prevProducto).appendTo(tr1);
+
+      });
+
+  },function(objetoError){
+      console.log('Error de lectura:'+objetoError.code);
+  });
+
+  function editar(id)
+  {
+      // Para pasar el ID a otro proceso lo hacemos a través de window.name
+      window.name= id;
+
+      // Cargamos la página editarproducto.html
+      location.assign('examenEditarPrendas.html');
+  }
+
+  function borrar(id)
+  {
+  	if(confirm("¿Está seguro de que desea borrar esta prenda?")==true)
+  	{
+  		refDB.child(id).remove();
+  	}
+  }
+
+  function buscar(usuario){
+  		if (usuario != "") {
+  			refDB.orderByChild('descripcion').equalTo(usuario).limitToFirst(1).on('value',function(datos)
+  			{
+  					$("tbody").children().remove()
+  					usuarios=datos.val();
+  					// Recorremos los productos y los mostramos
+  					$.each(usuarios, function(indice,valor)
+  					{
+  							var tBody = document.getElementById('dataTable').lastElementChild;
+  							var tr1 = document.createElement('tr');
+  							tBody.appendChild(tr1);
+  							var prevProducto='<td>'+valor.descripcion+'</td>';
+  							prevProducto+='<td>'+valor.valor+'</td>';
+  							prevProducto+='<td><button type="button" class="boton" onclick="editar(\''+indice+'\')">Editar</button></td>';
+  							prevProducto+='<td><button type="button" class="boton" onclick="borrar(\''+indice+'\')">Borrar</button></td>';
+  							$(prevProducto).appendTo(tr1);
+
+  					});
+
+  			},function(objetoError){
+  					console.log('Error de lectura:'+objetoError.code);
+  			});
+  		} else {
+  			refDB.on('value',function(datos)
+  			{
+  					$("tbody").children().remove()
+  			    usuarios=datos.val();
+  			    // Recorremos los productos y los mostramos
+  			    $.each(usuarios, function(indice,valor)
+  			    {
+  			        var tBody = document.getElementById('dataTable').lastElementChild;
+  			        var tr1 = document.createElement('tr');
+  			        tBody.appendChild(tr1);
+  			        var prevProducto='<td>'+valor.descripcion+'</td>';
+  			        prevProducto+='<td>'+valor.valor+'</td>';
+  			        prevProducto+='<td><button type="button" class="boton" onclick="editar(\''+indice+'\')">Editar</button></td>';
+  			        prevProducto+='<td><button type="button" class="boton" onclick="borrar(\''+indice+'\')">Borrar</button></td>';
+  			        $(prevProducto).appendTo(tr1);
+
+  			    });
+
+  			},function(objetoError){
+  			    console.log('Error de lectura:'+objetoError.code);
+  			});
+  		}
+
+  }
+
+  	</script>
+  <font face="Helvetica">
+  <div class="titulo" bgcolor="#000000">
+
+      <img src="https://svalue.org/new/wp-content/uploads/2019/05/Logo-NMP-Buen-Fin-2014-2.jpg" height="100px" />
+
+  </div>
+  <div class="contenedor">
+			<img src="https://www.goldamerica.net/public/images/home/home-slide-01.jpg" width="70%"  />
+
+
+     <div class="centrado">Prendas</div>
+     <div class="texto-encima"></div>
+
+
+    </div>
+
+
+  <lu>
+  <CENTER>
+
+  <style>
+
+ .contenedor{
+
+    text-align: center;
+
+}
+.titulo{
+    text-align: center;
+    background-color:#de283c;
+}
+.final{
+    text-align: center;
+    background-color:#de283c;
+    width:70%;
+}
+
+.centrado{
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    font-size: 8em;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    color:white;
+
+
+    transform: translate(-50%, -50%);
+}
+.texto-encima{
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+
+}
+.search{
+  font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  background-color:#de283c;
+  color:white;
+  width:70%;
+}
+.add{
+  font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  color:#de283c;
+}
+.boton {
+      background-color: #de283c;
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 14px;
+      margin: 2px 1px;
+      cursor: pointer;
+      border-radius: 8px;
+    }
+    .botonBlanco {
+          background-color: white;
+          border: none;
+          color: #de283c;
+          padding: 10px 20px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 14px;
+          margin: 10px 2px;
+          cursor: pointer;
+          border-radius: 8px;
+        }
+body{
+  background-image: url(https://i.pinimg.com/originals/37/9c/cb/379ccba5a68397e5366956db60585819.png);
+}
+    tr:nth-child(odd) {
+     background-color:#ea8a95;
+     color:white;
+     text-align:center;
+     font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    }
+    tr:nth-child(even) {
+     background-color:#f6cbd0;
+     color:#de283c;
+     text-align:center;
+     font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    }
+    th {
+      background-color: #742f37;
+      color: white;
+    }
+
+
+ </style>
+
+  <form action="" method="post" class="search">
+    <label for="">Filtrar por descripcion:</label>
+    <input type="text" name="usuario" id="usuario">
+    <button id="submit_button" class="botonBlanco" type="button" onclick="buscar(usuario.value)">Buscar</button>
+  </form>
+  <table id="dataTable" border-color="#000" cellspacing="7" cellpadding="10" width="70%">
+    <thead>
+  <th>Descripcion</th><th>Valor</th><th colspan="2">Acciones</th>
+  </thead>
+  <tbody></tbody>
+  </table>
+  <div class="final">
+    <td><button type="button" class="botonBlanco" onclick="window.location.href='examenPrincipal.html'">Regresar</button>
+    <button type="button" class="botonBlanco" onclick="window.location.href='examenAgregarPrendas.html'">Agregar prenda</button></td>
+  </div>
+   </CENTER>
+</lu>
+
+  </body>
+
+</html>

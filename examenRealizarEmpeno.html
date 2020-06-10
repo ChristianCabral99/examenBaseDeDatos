@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Nacional Monte de Piedad - Clientes</title>
+
+  </head>
+  <body bgcolor="#f9f9f9">
+    <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>
+     <script src="https://www.gstatic.com/firebasejs/3.8.0/firebase-app.js"></script>
+     <script src="https://www.gstatic.com/firebasejs/3.8.0/firebase-database.js"></script>
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  	<script>
+    var firebaseConfig = {
+    apiKey: "AIzaSyCLVHu4FuBxkn1fzuKS98is7LJ2NfvEwZQ",
+    authDomain: "examen-christiancabral.firebaseapp.com",
+    databaseURL: "https://examen-christiancabral.firebaseio.com",
+    projectId: "examen-christiancabral",
+    storageBucket: "examen-christiancabral.appspot.com",
+    messagingSenderId: "161495407175",
+    appId: "1:161495407175:web:5e52bb6271b7045d352f62"
+  };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    var dataDB = firebase.database().ref('clientes');
+    var dataDBP = firebase.database().ref('prendas');
+    var dataVP = firebase.database().ref('empenoPrenda');
+
+    var usuarios={};
+    var productos={};
+    dataDB.on('value', function(datos)
+    {
+      //$('usuarios').children().remove();
+      usuarios=datos.val();
+      var select= document.getElementById('clientes');
+      $.each(usuarios, function(indice,valor)
+      {
+       var option= document.createElement("option");
+       option.setAttribute("value", indice);
+       option.setAttribute("label", valor.nombre);
+       select.appendChild(option);
+     });
+    }, function(objetoError){
+      console.log('Error de lectura:'+objetoError.code);
+    });
+
+    getProductos();
+
+    function getProductos()
+    {
+      dataDBP.on('value', function(datos)
+      {
+      //$('usuarios').children().remove();
+      productos=datos.val();
+      for (var i = 1; i <=3; i++) {
+        var select= document.getElementById('product_' + i);
+        $.each(productos, function(indice,valor)
+        {
+         var option= document.createElement("option");
+         option.setAttribute("value", indice);
+         option.setAttribute("label", valor.descripcion);
+         select.appendChild(option);
+       });
+      }
+    });
+    }
+
+    function getPrecio(productx, preciox)
+    {
+      document.getElementById(preciox).value="";
+      var producto=dataDBP.child(productx);
+      producto.on('value', function (data){
+        var prod=data.val();
+        document.getElementById(preciox).value=prod.valor;
+      });
+    }
+
+    function calcImporte(cant, precio, importe)
+    {
+      document.getElementById(importe).value="";
+      var imp=cant * precio;
+      document.getElementById(importe).value=imp;
+    }
+
+    function guardarVenta() {
+      // Extraer la clave del usuario
+      var user = document.getElementById('clientes');
+      // Extraer la fecha del sistema
+      var d = new Date();
+      var m= d.getMonth()+1;
+      var mes= (m<10)? '0'+m:m;
+      var fechag =  d.getFullYear() + "-" + mes + "-" + d.getDate();
+      //Guardando la venta
+      dataDB.child(user.value).child('empenos').push({
+        fecha: fechag
+      });
+      alert('Empeño iniciado');
+    }
+
+    function calcularTotal(idventa)
+    {
+        var user = document.getElementById('clientes');
+        var query = dataDB.child(user.value).child('empenos').limitToLast(1);
+        query.on('child_added', function (snap)
+        {
+         document.getElementById(idventa).value =snap.key;
+        });
+        var id=document.getElementById(idventa).value;
+        var pzas=0;
+        var total=0;
+        for (var i = 1; i <=3; i++) {
+          var prod=document.getElementById('product_' + i).value;
+          //var cant=document.getElementById('cant_' + i).value;
+          var imp=document.getElementById('precio_' + i).value;
+          if(prod!=0)
+          {
+    				//alert('si');
+            //pzas+=parseInt(cant);
+    				pzas +=1;
+            total+=parseInt(imp);
+              dataVP.push({
+                  idemp: id,
+                  codprenda: prod,
+                  //cant: cant
+              });
+          }
+        }
+        //Actualizando el total y pzas en la venta
+        dataDB.child(user.value).child('empenos').child(id).update({
+            prendasPrestadas: pzas,
+            importeTotalPrestado: total
+        });
+    		alert('Empeño registrado');
+    }
+
+  	</script>
+  <font face="Helvetica">
+  <div class="titulo" bgcolor="#000000">
+
+      <img src="https://svalue.org/new/wp-content/uploads/2019/05/Logo-NMP-Buen-Fin-2014-2.jpg" height="100px" />
+
+  </div>
+  <div class="contenedor">
+			<img src="https://www.65ymas.com/uploads/s1/13/78/98/de-que-manera-puedo-empenar-mis-joyas-con-garantias.jpeg" width="70%"  />
+
+
+     <div class="centrado">Realizar Empe&ntilde;o</div>
+     <div class="texto-encima"></div>
+
+
+    </div>
+
+
+  <lu>
+  <CENTER>
+
+  <style>
+
+ .contenedor{
+
+    text-align: center;
+
+}
+.titulo{
+    text-align: center;
+    background-color:#de283c;
+}
+.final{
+    text-align: center;
+    background-color:#de283c;
+    width:70%;
+}
+
+.centrado{
+    position: absolute;
+    top: 49.5%;
+    left: 50%;
+    font-size: 10em;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    color:#742f37;
+    -webkit-text-stroke: 4px white;
+
+
+    transform: translate(-50%, -50%);
+}
+.texto-encima{
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+
+}
+.search{
+  font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  background-color:#de283c;
+  color:white;
+  width:70%;
+}
+.opcion{
+  font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  //background-color:#de283c;
+  //color:white;
+  //width:70%;
+}
+.add{
+  font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  color:#de283c;
+}
+.boton {
+      background-color: #de283c;
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 14px;
+      margin: 2px 1px;
+      cursor: pointer;
+      border-radius: 8px;
+    }
+    .botonBlanco {
+          background-color: white;
+          border: none;
+          color: #de283c;
+          padding: 10px 20px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 14px;
+          margin: 10px 2px;
+          cursor: pointer;
+          border-radius: 8px;
+        }
+body{
+  background-image: url(https://i.pinimg.com/originals/37/9c/cb/379ccba5a68397e5366956db60585819.png);
+}
+    tr:nth-child(odd) {
+     background-color:#ea8a95;
+     color:white;
+     text-align:center;
+     font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    }
+    tr:nth-child(even) {
+     background-color:#f6cbd0;
+     color:#de283c;
+     text-align:center;
+     font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    }
+    th {
+      background-color: #742f37;
+      color: white;
+    }
+
+
+ </style>
+
+  <form action="" method="post" class="search">
+    <input type="hidden" id="idVenta">
+    <select id="clientes" class="opcion">
+      <option value="0">Elige un cliente</option>
+    </select>
+    <button id="generarVenta" type="button" class="botonBlanco" onclick="guardarVenta()">Iniciar Empe&ntilde;o</button>
+  </form>
+  <table id="dataTable" border-color="#000" cellspacing="7" cellpadding="10" width="70%">
+    <thead>
+  <th>Prenda</th><th>Valor (Importe a prestar)</th>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <select id="product_1" class="opcion" onchange="getPrecio(this.value,'precio_1')">
+          <option value="0">Elige prenda</option>
+        </select>
+      </td>
+      <td>
+        <input type="number" class="opcion" id="precio_1">
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <select id="product_2" class="opcion" onchange="getPrecio(this.value,'precio_2')">
+          <option value="0">Elige prenda</option>
+        </select>
+      </td>
+      <td>
+        <input type="number" class="opcion" id="precio_2">
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <select id="product_3" class="opcion" onchange="getPrecio(this.value,'precio_3')">
+          <option value="0">Elige prenda</option>
+        </select>
+      </td>
+      <td>
+        <input type="number" class="opcion" id="precio_3">
+      </td>
+    </tr>
+  </tbody>
+  </table>
+  <div class="final">
+    <td><button type="button" class="botonBlanco" onclick="window.location.href='examenPrincipal.html'">Regresar</button>
+    <button id="finalizar" type="button" class="botonBlanco" onclick="calcularTotal('idVenta')">Finalizar Empe&ntilde;o</button></td>
+  </div>
+   </CENTER>
+</lu>
+
+  </body>
+
+</html>

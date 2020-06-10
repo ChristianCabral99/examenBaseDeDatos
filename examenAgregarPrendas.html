@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<title>Nacional Monte de Piedad - Agregar Prendas</title>
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<!--<script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-app.js"></script> -->
+</head>
+<body>
+	<CENTER>
+	<h1 id="holaMundo"></h1>
+	<script src="https://www.gstatic.com/firebasejs/3.6.1/firebase.js"></script>
+   <script>
+  // Your web app's Firebase configuration
+	var firebaseConfig = {
+    apiKey: "AIzaSyCLVHu4FuBxkn1fzuKS98is7LJ2NfvEwZQ",
+    authDomain: "examen-christiancabral.firebaseapp.com",
+    databaseURL: "https://examen-christiancabral.firebaseio.com",
+    projectId: "examen-christiancabral",
+    storageBucket: "examen-christiancabral.appspot.com",
+    messagingSenderId: "161495407175",
+    appId: "1:161495407175:web:5e52bb6271b7045d352f62"
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+
+// Se conecta con la base de datos de Firebase
+var dataDB= firebase.database().ref('prendas').push();
+
+function enviar()
+{
+	var descripcion= document.getElementById('desc');
+	var valor= document.getElementById('value');
+	dataDB.set({
+			descripcion: descripcion.value,
+			valor: valor.value,
+		});
+	alert('Prenda registrada correctamente');
+}
+
+</script>
+	<style>
+	.add{
+		font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+		color:#742f37;
+	}
+	body{
+		background-image: url(https://i.pinimg.com/originals/37/9c/cb/379ccba5a68397e5366956db60585819.png);
+	}
+	.boton {
+	      background-color: #de283c;
+	      border: none;
+	      color: white;
+	      padding: 10px 20px;
+	      text-align: center;
+	      text-decoration: none;
+	      display: inline-block;
+	      font-size: 14px;
+	      margin: 2px 1px;
+	      cursor: pointer;
+	      border-radius: 8px;
+	    }
+	</style>
+  <form action="" method="post" class ="add">
+		<h1>Agregar Prenda</h1>
+		<img src="https://www.bitacoracdmx.com/wp-content/uploads/2019/10/MONTE-DE-PIEDAD.png" width="400px"  /><br />
+    <label> Descripci&oacute;n: </label><input id="desc" class="input" type="text" value="" placeholder="Escribe la descripcion" required /><br />
+		<label> Valor: </label><input id="value" class="input" type="number" value="" maxlength="10" placeholder="Introduce el valor" required /><br />
+  <button id="submit_button" class="boton" type="submit" onclick="enviar()">Guardar</button>
+	<input type="button" class="boton" onclick="location.href='examenPrendas.html';" value="Regresar"/>
+  </form>
+</CENTER>
+</body>
+</html>
